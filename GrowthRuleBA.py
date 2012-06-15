@@ -28,6 +28,50 @@ class GrowthRuleBA(GrowthRule):
 	def run(self, n):
 		self.ba(self.net, n, self.m, self.l)
 
+	def run_nodes(self, nodes):
+		for node in nodes:
+			self.barabasi_albert_addnode(node)
+
+	def barabasi_albert_addnode(self, newnode):
+		net = self.net
+		N = net.number_of_nodes()
+		m = self.m
+		l = self.l
+		
+		degreesum = net.degreesum
+		links = []
+		denominator = N * l + (1-l)*degreesum
+		flag = True
+		while(flag):
+			#initialize all probabilities for preferential attachment calculations, sorted from least to highest
+			p = []
+			for j in range(0, m-len(links)):
+				p.append(random.random()*denominator)
+			p.sort()
+
+			#iterate over nodes in degrees dictionary
+			degsum = 0
+			examine = p.pop(0)
+			for node in net.node:
+				#add to degsum until higher than the threshold probability for attachment, only one attachment per node is allowed implicitly
+				degsum += l + (1-l) * net.deg[node]
+				if(degsum >= examine):
+					#add a link to the list of links to add to the network
+					links.append((newnode,node))
+					#update the dictionary of node degrees
+					if(len(p) != 0):
+						examine = p.pop(0)
+					else:
+						break;
+			links = list(set(links))
+			if len(links) < m:
+				flag = True
+				#print('here: '+str(len(links)))
+			else:
+				flag = False
+		#add the m preferentially attached edges, this also adds the node
+		net.add_edges_from(links)
+
 	def barabasi_albert_internalmemory(self, net, n, m, l=0):
 		#dt = datetime.datetime.now()
 		#initialize a cyclic graph in case net is empty
@@ -47,7 +91,7 @@ class GrowthRuleBA(GrowthRule):
 		for i in range(0,n):
 			degreesum = net.degreesum
 			if(i != 0 and i % 5000 == 0):
-				print (i)
+				print ("here:"+str(i))
 			newnode = net.get_next_index()
 			
 			links = []

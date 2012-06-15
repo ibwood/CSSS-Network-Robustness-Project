@@ -31,9 +31,11 @@ class memGraph(nx.Graph):
         #print(super())
         nx.Graph.__init__(self, data=data, **attr)
 
-    def get_next_index(self):
+    def get_next_index(self, inc = 0):
         while self.nextindex in self.node.keys():
             self.nextindex += 1
+	toret = self.nextindex
+	self.nextindex += inc
         return self.nextindex
 
     def add_node(self, n, attr_dict=None, **attr):

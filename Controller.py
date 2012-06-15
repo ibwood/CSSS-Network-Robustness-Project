@@ -6,7 +6,7 @@ import datetime
 
 class Controller(object):
 	def __init__(self):
-		self.sched = Scheduler.Scheduler("sequential")
+		self.sched = Scheduler.Scheduler("sequential_nodes")
 		self.graphs = []
 
 	def addBARule(self, m, l):
@@ -29,11 +29,11 @@ class Controller(object):
 
 if __name__ == "__main__":
 	init = 2	
-	n = 9998	
+	n = 99998	
 	m = 2
 	lam = 1
 	outputfile = "hello.gml"
 
 	c = Controller()
 	c.addBARule(m, lam)
-	c.runFresh(init, 1, n, outputfile)
+	c.runFresh(init, n, 1, outputfile)
