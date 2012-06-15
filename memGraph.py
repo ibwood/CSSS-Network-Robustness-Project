@@ -27,8 +27,14 @@ class memGraph(nx.Graph):
         self.deg = {}
         self.degreesum = 0
         self.a = attr
+        self.nextindex = 0
         #print(super())
         nx.Graph.__init__(self, data=data, **attr)
+
+    def get_next_index(self):
+        while self.nextindex in self.node.keys():
+            self.nextindex += 1
+        return self.nextindex
 
     def add_node(self, n, attr_dict=None, **attr):
         """Add a single node n and update node attributes.
