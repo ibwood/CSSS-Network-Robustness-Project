@@ -1,4 +1,5 @@
 import networkx as nx
+import memGraph
 import random
 import datetime
 
@@ -66,7 +67,7 @@ class GrowthRuleBA:
 		print(datetime.datetime.now()-dt)
 
 gba = GrowthRuleBA()
-g = nx.empty_graph()
+g = nx.empty_graph(create_using=memGraph.memGraph())
 gba.barabasi_albert(g, 10000, 1)
 nx.write_gml(g, "hello.gml")
 print(len(g.edges()))
