@@ -2,9 +2,9 @@ import networkx as nx
 import memGraph
 import random
 import datetime
-from GrowthRule import *
+from Rule import *
 
-class GrowthRuleBA(GrowthRule):
+class GrowthRuleBA(Rule):
 	def __init__(self):
 		pass
 
@@ -153,7 +153,7 @@ class GrowthRuleBA(GrowthRule):
 		for i in range(0,n):
 			if(i % 5000 == 0):
 				print (i)
-			newnode = net.get_next_index()
+			newnode = N #net.get_next_index()
 			links = []
 			
 			denominator = N * l + (1-l)*degreesum
