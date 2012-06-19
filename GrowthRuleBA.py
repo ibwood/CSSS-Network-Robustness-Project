@@ -29,17 +29,25 @@ class GrowthRuleBA(Rule):
 		self.ba(self.net, n, self.m, self.l)
 
 	def run_nodes(self, nodes):
+		newnodes = []
 		for node in nodes:
-			self.barabasi_albert_addnode(node)
-
+			newnodes.append(self.barabasi_albert_addnode(node))
+		return newnodes
 	def barabasi_albert_addnode(self, newnode):
 		net = self.net
-		N = net.number_of_nodes()
+		N = net.number_of_nodes()# - net.degree(newnode)
 		m = self.m
 		l = self.l
 		
 		degreesum = net.degreesum
+		checks = net.nodes()		
+		if net.has_node(newnode):
+			N -= net.deg[newnode] + 1
+			for neighbor in net.neighbors(newnode):
+				degreesum -= net.deg[neighbor]
+				checks.remove(neighbor)	
 		links = []
+		nodes = []
 		denominator = N * l + (1-l)*degreesum
 		flag = True
 		while(flag):
@@ -52,12 +60,14 @@ class GrowthRuleBA(Rule):
 			#iterate over nodes in degrees dictionary
 			degsum = 0
 			examine = p.pop(0)
-			for node in net.node:
+			
+			for node in checks:
 				#add to degsum until higher than the threshold probability for attachment, only one attachment per node is allowed implicitly
 				degsum += l + (1-l) * net.deg[node]
 				if(degsum >= examine):
 					#add a link to the list of links to add to the network
 					links.append((newnode,node))
+					nodes.append(node)
 					#update the dictionary of node degrees
 					if(len(p) != 0):
 						examine = p.pop(0)
@@ -71,6 +81,7 @@ class GrowthRuleBA(Rule):
 				flag = False
 		#add the m preferentially attached edges, this also adds the node
 		net.add_edges_from(links)
+		return nodes
 
 	def barabasi_albert_internalmemory(self, net, n, m, l=0):
 		#dt = datetime.datetime.now()
