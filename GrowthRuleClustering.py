@@ -16,7 +16,7 @@ class GrowthRuleClustering(Rule):
 		#print validneighbors
 		#print self.net.neighbors(nodes[0])
 		#print self.net.neighbors(validneighbors[0])
-		print "inside"		
+		#print "inside"		
 		for node in nodes:
 			nodeneighs = self.net.neighbors(node)
 			list_neighbors = [] #possible connections to find neighbors
@@ -30,12 +30,12 @@ class GrowthRuleClustering(Rule):
 					if l not in nodeneighs and l != node:
 						poss_conns.append(l)
 			
-			print node
-			print validneighbors
-			print poss_conns
+			#print node
+			#print validneighbors
+			#print poss_conns
 			if len(poss_conns) != 0:
 				edgeto = (random.choice(poss_conns))
-				print(edgeto)
+				#print(edgeto)
 				self.net.add_edge(node, edgeto)
 				resultlist.append(True)
 			else:

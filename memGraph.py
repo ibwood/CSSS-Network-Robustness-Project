@@ -28,6 +28,7 @@ class memGraph(nx.Graph):
         self.degreesum = 0
         self.a = attr
         self.nextindex = 0
+        self.nodelist = []
         #print(super())
         nx.Graph.__init__(self, data=data, **attr)
 
@@ -93,6 +94,7 @@ class memGraph(nx.Graph):
             self.adj[n] = {}
             self.deg[n] = 0
             self.node[n] = attr_dict
+            self.nodelist.append(n)
         else: # update attr even if node already exists
             self.node[n].update(attr_dict)
 
@@ -161,6 +163,7 @@ class memGraph(nx.Graph):
                 self.adj[n] = {}
                 self.deg[n] = 0
                 self.node[n] = attr.copy()
+                self.nodelist.append(n)
             else:
                 self.node[n].update(attr)
 
@@ -208,6 +211,7 @@ class memGraph(nx.Graph):
             del adj[u][n]   # remove all edges n-u in graph
         del adj[n]          # now remove node
         del self.deg[n]
+        self.nodelist.remove(n)
         self.degreesum -= count
 
 
@@ -248,6 +252,7 @@ class memGraph(nx.Graph):
                     self.deg[u] -= 1
                 del adj[n]
                 del self.deg[n]
+                self.nodelist.remove(n)
                 self.degreesum -= count
             except KeyError:
                 pass
@@ -313,10 +318,12 @@ class memGraph(nx.Graph):
         if u not in self.node:
             self.adj[u] = {}
             self.node[u] = {}
+            self.nodelist.append(u)
             self.deg[u] = 0
         if v not in self.node:
             self.adj[v] = {}
             self.node[v] = {}
+            self.nodelist.append(v)
             self.deg[u] = 0
         # add the edge
         datadict=self.adj[u].get(v,{})
@@ -390,10 +397,12 @@ class memGraph(nx.Graph):
             if u not in self.node:
                 self.adj[u] = {}
                 self.node[u] = {}
+                self.nodelist.append(u)
                 self.deg[u] = 0
             if v not in self.node:
                 self.adj[v] = {}
                 self.node[v] = {}
+                self.nodelist.append(v)
                 self.deg[v] = 0
             datadict=self.adj[u].get(v,{})
             datadict.update(attr_dict)
@@ -507,7 +516,7 @@ class memGraph(nx.Graph):
         self.graph.clear()
         self.degreesum = 0
         self.deg.clear()
-
+        self.nodelist = []
 
     def subgraph(self, nbunch):
         """Return the subgraph induced on nodes in nbunch.
@@ -569,5 +578,10 @@ class memGraph(nx.Graph):
 	for d in H.node:
             H.deg[d] = H.degree(d)
         H.degreesum = sum(H.degree().values())
+        H.nodelist = self.nodelist
         H.graph=self.graph
         return H
+    def cmp(self, x, y):
+	return self.deg[x] - self.deg[y]
+    def resort(self):
+        self.nodelist.sort(cmp=self.cmp, reverse=True)

@@ -12,8 +12,10 @@ class GrowthRuleBA(Rule):
 		self.l = l
 		self.m = m
 		self.net = network
+		self.c = Comparator(self.net)
 		self.ba = None
 		self.decide()
+		self.iterations = []
 
 	def decide(self):
 		if hasattr(self.net, 'degreesum'):
@@ -24,6 +26,7 @@ class GrowthRuleBA(Rule):
 	def set_new_network(self, net):
 		self.net = net
 		self.decide()
+		self.c = Comparator(self.net)
 
 	def run(self, n):
 		self.ba(self.net, n, self.m, self.l)
@@ -40,16 +43,18 @@ class GrowthRuleBA(Rule):
 		l = self.l
 		
 		degreesum = net.degreesum
-		checks = net.nodes()		
+		checks = list(net.nodelist)
 		if net.has_node(newnode):
 			N -= net.deg[newnode] + 1
 			for neighbor in net.neighbors(newnode):
 				degreesum -= net.deg[neighbor]
-				checks.remove(neighbor)	
+				checks.remove(neighbor)
+		#checks = sorted(checks, cmp= self.c.cmp, reverse=True)
 		links = []
 		nodes = []
 		denominator = N * l + (1-l)*degreesum
 		flag = True
+                iterations = 0
 		while(flag):
 			#initialize all probabilities for preferential attachment calculations, sorted from least to highest
 			p = []
@@ -60,8 +65,10 @@ class GrowthRuleBA(Rule):
 			#iterate over nodes in degrees dictionary
 			degsum = 0
 			examine = p.pop(0)
-			
+			#print "before"
 			for node in checks:
+				iterations += 1
+				#print "in"
 				#add to degsum until higher than the threshold probability for attachment, only one attachment per node is allowed implicitly
 				degsum += l + (1-l) * net.deg[node]
 				if(degsum >= examine):
@@ -72,6 +79,7 @@ class GrowthRuleBA(Rule):
 					if(len(p) != 0):
 						examine = p.pop(0)
 					else:
+						#print "here"
 						break;
 			links = list(set(links))
 			if len(links) < m:
@@ -81,6 +89,7 @@ class GrowthRuleBA(Rule):
 				flag = False
 		#add the m preferentially attached edges, this also adds the node
 		net.add_edges_from(links)
+		self.iterations.append(iterations)
 		return nodes
 
 	def barabasi_albert_internalmemory(self, net, n, m, l=0):
@@ -204,4 +213,8 @@ class GrowthRuleBA(Rule):
 			#add the m preferentially attached edges, this also adds the node
 			net.add_edges_from(links)
 		print(datetime.datetime.now()-dt)
-
+class Comparator(object):
+	def __init__(self, net):
+		self.net = net
+	def cmp(self, x, y):
+		return self.net.deg[x] - self.net.deg[y]

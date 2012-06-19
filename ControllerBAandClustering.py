@@ -2,7 +2,7 @@ import networkx as nx
 import memGraph
 import SeqScheduler
 import GrowthRuleBA
-from BAClusteringScheduler import *
+from SchedulerBAClustering import *
 from GrowthRuleClustering import *
 import datetime
 
@@ -13,7 +13,7 @@ class Controller(object):
 		self.graphs = []
 
 	def addClusteringSched(self, m, p):
-		self.clusteringsched = BAClusteringScheduler(m, p)
+		self.clusteringsched = SchedulerBAClustering(m, p)
 		self.sched.add_rule(self.clusteringsched)
 
 	def addBARule(self, m, l):
@@ -33,18 +33,27 @@ class Controller(object):
 		self.sched.run(steps, stepsize)
 		print(len(g.edges()))
 		print(len(g.node))
+		print nx.average_clustering(g)
+		gba = self.clusteringsched.rulelist[0]
+		sumiter = 0
+		for i in gba.iterations:
+			sumiter += i
+		sumiter = float(sumiter)/float(len(gba.iterations))
+		print("Average Iterations: "+str(sumiter))
 		print(datetime.datetime.now()-dt)
 		nx.write_gml(g, out)
 
 if __name__ == "__main__":
-	init = 2	
-	n = 98	
-	mtotal = 2
+	init = 3	
+	n = 19997	
+	mtotal = 3
 	m = 1
-	p = .1
+	p = .4
+	mt = p * (mtotal-1)
 	lam = 0
 	outputfile = "graphs/hello.gml"
 
+	print "mt: "+str(mt)
 	c = Controller()
 	c.addClusteringSched(mtotal, p)
 	c.addBARule(m, lam)
