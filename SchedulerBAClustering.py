@@ -12,7 +12,7 @@ class SchedulerBAClustering(Rule):
 		for i in range(0, n):
 			if i % 5000 == 0:
 				print i
-				self.net.resort()
+				#self.net.resort()
 			node = self.net.get_next_index()
 			nodes = self.rulelist[0].run_nodes([node])[0]
 			#print nodes				

@@ -46,6 +46,7 @@ class GrowthRuleBA(Rule):
 		checks = list(net.nodelist)
 		if net.has_node(newnode):
 			N -= net.deg[newnode] + 1
+			checks.remove(newnode)
 			for neighbor in net.neighbors(newnode):
 				degreesum -= net.deg[neighbor]
 				checks.remove(neighbor)

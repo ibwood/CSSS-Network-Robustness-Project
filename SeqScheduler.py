@@ -1,5 +1,6 @@
 from Scheduler import *
-
+import networkx as nx
+import datetime
 class SeqScheduler(Scheduler):
 	def __init__(self, runtype):
 		self.rulelist = []
@@ -28,9 +29,14 @@ class SeqScheduler(Scheduler):
 
 	def run_sequential(self, steps, stepsize):
 		for step in range(0, steps):
+			dt = datetime.datetime.now()
 			for rule in self.rulelist:
 				rule.run(stepsize)
-
+			print("Edges: "+str(len(self.net.edges())))
+			print("Nodes: "+str(len(self.net.node)))
+			print("Average Clustering: "+str(nx.average_clustering(self.net)))
+			
+			print(datetime.datetime.now()-dt)
 	def run(self, steps, stepsize):
 		self.r(steps, stepsize)
 	
