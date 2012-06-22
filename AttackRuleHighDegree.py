@@ -13,6 +13,9 @@ class AttackRuleHighDegree(Rule):
 		num_to_rem = int(math.ceil(self.net.number_of_nodes()*self.percent))
 		sortedlist = self.net.node.keys()
 		sortedlist.sort(cmp=self.cmp, reverse=True)
+		#print(sortedlist)
+		#for s in sortedlist:
+		#	print self.net.degree(s)
 		self.net.remove_nodes_from(sortedlist[0:num_to_rem])
 		print("Removed "+str(num_to_rem)+" highest degree nodes")
 	def run_nodes(self, nodes, **args):

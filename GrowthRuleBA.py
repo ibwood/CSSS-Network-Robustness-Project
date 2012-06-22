@@ -53,7 +53,7 @@ class GrowthRuleBA(Rule):
 		#checks = sorted(checks, cmp= self.c.cmp, reverse=True)
 		links = []
 		nodes = []
-		denominator = N * l + (1-l)*degreesum
+		denominator = N * l + (1-l)*(degreesum+N)
 		flag = True
                 iterations = 0
 		while(flag):
@@ -71,7 +71,7 @@ class GrowthRuleBA(Rule):
 				iterations += 1
 				#print "in"
 				#add to degsum until higher than the threshold probability for attachment, only one attachment per node is allowed implicitly
-				degsum += l + (1-l) * net.deg[node]
+				degsum += l + (1-l) * (net.deg[node]+1)
 				if(degsum >= examine):
 					#add a link to the list of links to add to the network
 					links.append((newnode,node))

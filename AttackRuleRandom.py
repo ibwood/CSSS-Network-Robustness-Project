@@ -12,8 +12,11 @@ class AttackRuleRandom(Rule):
 		N = self.net.number_of_nodes()
 		num_to_rem = int(math.ceil(N*self.percent))
 		nodes_to_rem = []
+		#print self.net.degree()
 		for i in range(0, num_to_rem):
-			self.net.remove_node(random.choice(self.net.node.keys()))
+			choice = random.choice(self.net.node.keys())
+			#print(self.net.degree(choice))
+			self.net.remove_node(choice)
 		print ("Removed "+str(num_to_rem) + " random nodes")
 	def run_nodes(self, nodes, **args):
 		print "Must Implement run_nodes!"
