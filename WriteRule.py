@@ -6,7 +6,7 @@ class WriteRule(Rule):
 		self.prefix = prefix
 		self.index = start
 	def run(self, n, **args):
-		nx.write_gml(self.net, self.prefix+str(self.index)+".gml")
+		nx.write_gml(self.net, self.prefix+str(self.index)+".gml.bz2")
 		self.index += 1
 	def run_nodes(self, nodes, **args):
 		print "Must Implement run_nodes!"
