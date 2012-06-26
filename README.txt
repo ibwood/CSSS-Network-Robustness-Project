@@ -15,4 +15,12 @@ lambda # in prefix l#_ // in the above example 0 - this sets the BA lambda to 0
 number_of_turns #in prefix nt#_ // in the above example 1 - this is the number of turns beyond the initial that the grow-attack cycle will run.
 
 
+or
 
+python alternative.py config.txt
+
+where config.txt looks like:
+saved_graphs/ 1 3 10000 1 0 random .1 1000 3 1 .2 0 1
+saved_graphs/ 1 3 10000 1 0 degree .1 1000 3 1 .2 0 1
+
+-the program will be run for each line
